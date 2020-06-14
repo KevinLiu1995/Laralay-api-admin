@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/shanghai',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'zh-CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -175,6 +175,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Spatie\Permission\PermissionServiceProvider::class,
+        Mews\Captcha\CaptchaServiceProvider::class,
+        Overtrue\LaravelWeChat\ServiceProvider::class,
+		// laravel Debug Tool
+		Barryvdh\Debugbar\ServiceProvider::class,
+		// ide helper
+		Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+		// 图片处理
+		Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -225,6 +234,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
+		 // 图片处理
+		'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 
