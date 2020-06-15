@@ -43,6 +43,7 @@
                 var dataTable = table.render({
                     elem: '#dataTable'
                     , height: 500
+                    , size: 'lg'
                     , url: "{{ route('admin.role.data') }}" //数据接口
                     , page: true //开启分页
                     , cols: [[ //表头

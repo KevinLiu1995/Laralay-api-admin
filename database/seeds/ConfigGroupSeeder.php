@@ -59,7 +59,7 @@ class ConfigGroupSeeder extends Seeder
                     [
                         'label' => '标题',
                         'key' => 'site_title',
-                        'val' => 'laravel6.0LTS后台管理',
+                        'val' => 'LaraLay后台管理系统',
                         'type' => 'input',
                         'content' => '',
                         'tips' => '',

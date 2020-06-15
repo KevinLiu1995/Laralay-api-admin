@@ -52,6 +52,7 @@
                         elem: '#dataTable',
                         url: "{{ route('admin.permission.data') }}",
                         where: {model: "permission"},
+                        size: 'lg',
                         cols: [[ //表头
                             {field: 'id', title: 'ID', sort: true, width: 80}
                             , {field: 'display_name', title: '显示名称'}

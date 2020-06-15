@@ -49,6 +49,7 @@
                         treePidName: 'parent_id',     // treetable新增参数
                         treeDefaultClose: false,   // treetable新增参数
                         treeLinkage: false,        // treetable新增参数
+                        size: 'lg',
                         elem: '#dataTable',
                         url: "{{ route('admin.category.data') }}",
                         cols: [[ //表头

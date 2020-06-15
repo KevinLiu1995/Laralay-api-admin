@@ -52,13 +52,13 @@ class ApiController extends Controller
 				return response()->json($data);
 			}
 			// 动态生成图片质量
-			if ($file->getSize() > 10*1024*1024){
+			if ($file->getSize() > 10 * 1024 * 1024) {
 				$quality = 0.3;
-			}else if ($file->getSize() > 5*1024*1024){
-				$quality  = 0.5;
-			}else if ($file->getSize() > 8*1024*1024){
+			} else if ($file->getSize() > 5 * 1024 * 1024) {
+				$quality = 0.5;
+			} else if ($file->getSize() > 8 * 1024 * 1024) {
 				$quality = 0.8;
-			}else{
+			} else {
 				$quality = 1;
 			}
 		} else {
@@ -67,10 +67,10 @@ class ApiController extends Controller
 		}
 
 
-
-		if (env('UPLOAD_DRIVER','local') === 'qiniu') {
-			$res = self::qiniuUpload($file,$filename);
-			if ($res){
+		if (config('app.upload_driver') === 'qiniu') {
+			// 七牛云上传
+			$res = self::qiniuUpload($file, $filename);
+			if ($res) {
 				$data = [
 					'code' => 0,
 					'msg' => '上传成功',
@@ -81,14 +81,14 @@ class ApiController extends Controller
 		} else {
 			// 本地上传，将图片移动目标存储路径中
 			$file = Image::make($file);
-			$file->encode($extension,$quality);
-			if (!file_exists($upload_path)){
-				if (!mkdir($upload_path, 0777) && !is_dir($upload_path)) {
+			$file->encode($extension, $quality);
+			if (!file_exists($upload_path)) {
+				if (!mkdir($upload_path, 0777, true) && !is_dir($upload_path)) {
 					$data = ['code' => 1, 'msg' => '上传失败,文件夹创建失败', 'data' => ''];
 				}
 			}
-			$res = $file->save($upload_path.'/'.$filename);
-			if ($res){
+			$res = $file->save($upload_path . '/' . $filename);
+			if ($res) {
 				$data = [
 					'code' => 0,
 					'msg' => '上传成功',
@@ -104,17 +104,20 @@ class ApiController extends Controller
 	/*
    * 七牛上传图片
    */
-	public static function qiniuUpload($file,$filename)
+	public static function qiniuUpload($file, $filename)
 	{
-		$auth = new Auth(env('QINIU_AK'), env('QINIU_SK'));
+		$auth = new Auth(config('app.qiniu_ak'), config('app.qiniu_sk'));
 		//生成上传图片的token
-		$token = $auth->uploadToken(env('QINIU_BUCKET'));
+		$token = $auth->uploadToken(config('app.qiniu_bucket'));
 		$uploadMgr = new UploadManager();
 		list($ret, $err) = $uploadMgr->putFile($token, $filename, $file);
 		if ($ret) {
 			//这里返回的是一个bucket的域名,在前面添加http://后就可以正常看到图片
-			return env('QINIU_DOMAIN') . '/' . $filename;
+			return config('app.qiniu_domain') . '/' . $filename;
 		}
+
+		Log::error('七牛云上传文件失败' . PHP_EOL . json_encode($err));
+
 		return null;
 	}
 

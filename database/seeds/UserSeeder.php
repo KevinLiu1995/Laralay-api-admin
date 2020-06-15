@@ -211,10 +211,10 @@ class UserSeeder extends Seeder
 
         //初始化的角色
         $roles = [
-            ['name' => 'business', 'display_name' => '商务'],
-            ['name' => 'assessor', 'display_name' => '审核员'],
-            ['name' => 'channel', 'display_name' => '渠道专员'],
-            ['name' => 'editor', 'display_name' => '编辑人员'],
+//            ['name' => 'business', 'display_name' => '商务'],
+//            ['name' => 'assessor', 'display_name' => '审核员'],
+//            ['name' => 'channel', 'display_name' => '渠道专员'],
+//            ['name' => 'editor', 'display_name' => '编辑人员'],
             ['name' => 'admin', 'display_name' => '管理员'],
         ];
         foreach ($roles as $role) {

@@ -38,6 +38,7 @@
                     elem: '#dataTable'
                     , autoSort: false
                     , height: 500
+                    , size: 'lg'
                     , url: "{{ route('admin.config_group.data') }}" //数据接口
                     , page: true //开启分页
                     , cols: [[ //表头
