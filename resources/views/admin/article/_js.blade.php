@@ -4,6 +4,14 @@
 		var upload = layui.upload;
 		var element = layui.element;
 
+		window.deleteUploadPic = function (id, url) {
+			console.log(id)
+			//todo 可拓展后端删除对应 url，自己实现吧哈哈哈
+			console.log(url)
+			//移除图片dom
+			$('#' + id).remove();
+		}
+
 		//普通图片上传
 		$(".uploadPic").each(function (index, elem) {
 			var uploadInst = upload.render({
@@ -78,7 +86,7 @@
 				// 	console.log(index)
 				// 	// element.progress('images-progress-' + index + '', percent); //配合 layui 进度条元素使用
 				// },
-			    // 魔改版进度提示，可以实现多个progress显示进度条
+				// 魔改版进度提示，可以实现多个progress显示进度条
 				xhr: function (index, e) {
 					var percent = e.loaded / e.total;//计算百分比
 					percent = parseFloat(percent.toFixed(2));
@@ -89,17 +97,18 @@
 					//预读本地文件示例，不支持ie8
 					obj.preview(function (index, file, result) {
 						var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
-						fileCount++
-						if (fileCount > maxFileCount) {
-							fileCount = maxFileCount;
-							layer.msg('文件数量不得超过' + maxFileCount + '个', {icon: 2});
-							delete files[index]
-							uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
-							fileCount--
-							return false;
-						}
+					    //todo 这个不好用了，换成后端判断图片数量
+						// fileCount++
+						// if (fileCount > maxFileCount) {
+						// 	fileCount = maxFileCount;
+						// 	layer.msg('文件数量不得超过' + maxFileCount + '个', {icon: 2});
+						// 	delete files[index]
+						// 	uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+						// 	fileCount--
+						// 	return false;
+						// }
 						//$('#multiple-pic-preview').append('<li><img src="' + result + '"class="layui-upload-img img" style="height: auto;width: 100%;"><p>等待上传</p> <div class="layui-progress" style="margin-top: 20px;" lay-filter="progress" lay-showPercent="true"><div class="layui-progress-bar layui-bg-green"lay-percent="100%"></div></div></li>')
-						$('#multiple-pic-preview').append('<li id="images-' + index + '"><img src="' + result + '" alt="' + file.name + '"class="layui-upload-img img" style="height: auto;width: 100%;"><p id="images-p-' + index + '">等待上传<button class="test-delete layui-bg-red">删除</button></p><div class="layui-progress" style="margin-top: 22px;z-index: 999" lay-filter="progress-'+index+'" lay-showPercent="true"><div class="layui-progress-bar layui-bg-green"lay-percent="100%"></div></div></li>')
+						$('#multiple-pic-preview').append('<li id="images-' + index + '"><img src="' + result + '" alt="' + file.name + '"class="layui-upload-img img" style="height: auto;width: 100%;"><p id="images-p-' + index + '">等待上传<button class="test-delete layui-bg-red">删除</button></p><div class="layui-progress" style="margin-top: 22px;z-index: 999" lay-filter="progress-' + index + '" lay-showPercent="true"><div class="layui-progress-bar layui-bg-green"lay-percent="100%"></div></div></li>')
 						// console.log(files)
 						let del_btn = '#images-' + index
 						//删除文件的监听
@@ -115,10 +124,14 @@
 				}
 				, done: function (res, index) {
 					if (res.code === 0) {
+						console.log(res)
 						// layer.msg(res.msg, {icon: 1});
-						$('#images-p-' + index + '').remove()
-						$('#images-' + index + '').append('<p>上传成功</p>')
-						$('#multiple-pic-preview').append('<input type="hidden" name="images[]" value="' + res.url + '">')
+						$('#images-' + index + '').remove()
+						//$('#images-' + index + '').append('<p>上传成功</p>')
+						//$('#multiple-pic-preview').append('<li><img src="' + result + '"class="layui-upload-img img" style="height: auto;width: 100%;"><p>等待上传</p> <div class="layui-progress" style="margin-top: 20px;" lay-filter="progress" lay-showPercent="true"><div class="layui-progress-bar layui-bg-green"lay-percent="100%"></div></div></li>')
+						$('#multiple-pic-preview').append('<li id="images-' + index + '"><img src="' + res.url + '" class="layui-upload-img img" style="height: auto;width: 100%;"><p id="images-p-' + index + '">上传成功<button class="test-delete layui-bg-red">删除</button></p></li>')
+
+						$('#multiple-pic-preview').append('<input id="images-input-' + index + '" type="hidden" name="images[]" value="' + res.url + '">')
 
 						let img_arr = []
 						let images = $("input[name^='images']")
@@ -128,6 +141,18 @@
 						delete files[index]
 						console.log(img_arr)
 						uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+
+						let del_btn = '#images-' + index
+						let input = '#images-input-' + index
+						//删除文件的监听
+						$(del_btn).find('.test-delete').on('click', function () {
+							console.log(index)
+							delete files[index]; //删除对应的文件
+							$(del_btn).remove();
+							$(input).remove();
+							fileCount--
+							uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+						});
 					} else {
 						layer.msg(res.msg, {icon: 2})
 					}
@@ -139,8 +164,6 @@
 				}
 			});
 		})
-
-
 	})
 </script>
 <link href="/baidu-editor/themes/default/css/umeditor.min.css" type="text/css" rel="stylesheet">

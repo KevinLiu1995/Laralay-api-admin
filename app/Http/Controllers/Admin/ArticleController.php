@@ -73,6 +73,7 @@ class ArticleController extends Controller
     public function store(ArticleRequest $request)
     {
         $data = $request->all();
+		$data['images'] = $data['images'] ? implode(',',$data['images']): $data['images'];
         try{
             $article = Article::create($data);
             $article->tags()->sync($request->get('tags',[]));
@@ -101,6 +102,7 @@ class ArticleController extends Controller
     public function edit($id)
     {
         $article = Article::with('tags')->findOrFail($id);
+        $article->images = explode(',',$article->images);
         //分类
         $categories = Category::with('allChilds')->where('parent_id',0)->orderBy('sort','asc')->get();
         //标签
@@ -121,11 +123,13 @@ class ArticleController extends Controller
     {
         $article = Article::with('tags')->findOrFail($id);
         $data = $request->all();
+        $data['images'] = $data['images'] ? implode(',',$data['images']): $data['images'];
         try{
             $article->update($data);
             $article->tags()->sync($request->get('tags',[]));
             return Redirect::to(URL::route('admin.article'))->with(['success'=>'更新成功']);
         }catch (\Exception $exception){
+        	dd($exception->getMessage());
             return Redirect::back()->withErrors('更新失败');
         }
     }

@@ -79,6 +79,10 @@ Route::group(['namespace' => 'Admin', 'prefix' => 'admin', 'middleware' => ['aut
 	Route::group(['middleware' => 'permission:system.menu'], function () {
 		Route::get('menu', 'MenuController@index')->name('admin.menu');
 		Route::get('menu/data', 'MenuController@data')->name('admin.menu.data');
+		// 添加
+		Route::get('menu/create', 'MenuController@create')->name('admin.menu.create');
+		Route::post('role/store', 'MenuController@store')->name('admin.menu.store');
+
 	});
 
 	//角色管理
